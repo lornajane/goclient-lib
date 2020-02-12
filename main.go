@@ -3,24 +3,24 @@ package main
 import (
 	"fmt"
 
-	"github.com/antihax/optional"
-	"github.com/lornajane/goclient-lib/sms"
+	"github.com/lornajane/goclient-lib/nexmo"
+	"github.com/spf13/viper"
 )
 
 func main() {
 	fmt.Println("Hello")
 
-	smsClient := sms.NewAPIClient(sms.NewConfiguration())
-	smsOpts := sms.SendAnSmsOpts{}
-	smsOpts.Text = optional.NewString("Hello world")
-	smsOpts.ApiSecret = optional.NewString("API_SECRET")
-
-	result, _, err := smsClient.DefaultApi.SendAnSms(nil, "json", "API_KEY", "GoTesting", "NUMBER", &smsOpts)
-
+	viper.SetConfigName("config")
+	viper.AddConfigPath(".")
+	err := viper.ReadInConfig()
 	if err != nil {
 		panic(err)
 	}
-	fmt.Printf("%#v\n", result)
+
+	apiKey := viper.GetString("api_key")
+	apiSecret := viper.GetString("api_secret")
+	smsClient := nexmo.NewNexmoSMSClient(apiKey, apiSecret)
+	smsClient.Send()
 
 	fmt.Println("End")
 }
