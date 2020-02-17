@@ -22,7 +22,7 @@ func main() {
 
 	auth := nexmo.CreateAuthFromKeySecret(apiKey, apiSecret)
 	smsClient := nexmo.NewNexmoSMSClient(auth)
-	smsClient.Send()
+	smsClient.Send("LornaTest", "44777000777", "This is a message from golang")
 
 	fmt.Println("End")
 }

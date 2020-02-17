@@ -7,11 +7,13 @@ import (
 	"github.com/lornajane/goclient-lib/sms"
 )
 
+// Client for working with the SMS API
 type NexmoSMSClient struct {
 	apiKey    string
 	apiSecret string
 }
 
+// Create a new SMS Client, supplying an Auth to work with
 func NewNexmoSMSClient(Auth Auth) *NexmoSMSClient {
 	client := new(NexmoSMSClient)
 	creds := Auth.getCreds()
@@ -20,7 +22,8 @@ func NewNexmoSMSClient(Auth Auth) *NexmoSMSClient {
 	return client
 }
 
-func (client *NexmoSMSClient) Send() {
+// Send an SMS
+func (client *NexmoSMSClient) Send(from string, to string, text string) {
 
 	config := sms.NewConfiguration()
 
@@ -30,10 +33,10 @@ func (client *NexmoSMSClient) Send() {
 	smsClient := sms.NewAPIClient(config)
 
 	smsOpts := sms.SendAnSmsOpts{}
-	smsOpts.Text = optional.NewString("Hello world")
+	smsOpts.Text = optional.NewString(text)
 	smsOpts.ApiSecret = optional.NewString(client.apiSecret)
 
-	result, _, err := smsClient.DefaultApi.SendAnSms(nil, "json", client.apiKey, "GoTesting", "447846810475", &smsOpts)
+	result, _, err := smsClient.DefaultApi.SendAnSms(nil, "json", client.apiKey, from, to, &smsOpts)
 
 	if err != nil {
 		panic(err)
