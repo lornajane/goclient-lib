@@ -19,7 +19,9 @@ func main() {
 
 	apiKey := viper.GetString("api_key")
 	apiSecret := viper.GetString("api_secret")
-	smsClient := nexmo.NewNexmoSMSClient(apiKey, apiSecret)
+
+	auth := nexmo.CreateAuthFromKeySecret(apiKey, apiSecret)
+	smsClient := nexmo.NewNexmoSMSClient(auth)
 	smsClient.Send()
 
 	fmt.Println("End")

@@ -12,10 +12,11 @@ type NexmoSMSClient struct {
 	apiSecret string
 }
 
-func NewNexmoSMSClient(ApiKey string, ApiSecret string) *NexmoSMSClient {
+func NewNexmoSMSClient(Auth Auth) *NexmoSMSClient {
 	client := new(NexmoSMSClient)
-	client.apiKey = ApiKey
-	client.apiSecret = ApiSecret
+	creds := Auth.getCreds()
+	client.apiKey = creds[0]
+	client.apiSecret = creds[1]
 	return client
 }
 
