@@ -9,70 +9,7 @@
  */
 
 package sms
-
-import (
-	"bytes"
-	"encoding/json"
-)
-
 // MessageXmlWrapper struct for MessageXmlWrapper
 type MessageXmlWrapper struct {
-	Messages *[]Message `json:"messages,omitempty"`
+	Messages []Message `json:"messages,omitempty"`
 }
-
-// GetMessages returns the Messages field value if set, zero value otherwise.
-func (o *MessageXmlWrapper) GetMessages() []Message {
-	if o == nil || o.Messages == nil {
-		var ret []Message
-		return ret
-	}
-	return *o.Messages
-}
-
-// GetMessagesOk returns a tuple with the Messages field value if set, zero value otherwise
-// and a boolean to check if the value has been set.
-func (o *MessageXmlWrapper) GetMessagesOk() ([]Message, bool) {
-	if o == nil || o.Messages == nil {
-		var ret []Message
-		return ret, false
-	}
-	return *o.Messages, true
-}
-
-// HasMessages returns a boolean if a field has been set.
-func (o *MessageXmlWrapper) HasMessages() bool {
-	if o != nil && o.Messages != nil {
-		return true
-	}
-
-	return false
-}
-
-// SetMessages gets a reference to the given []Message and assigns it to the Messages field.
-func (o *MessageXmlWrapper) SetMessages(v []Message) {
-	o.Messages = &v
-}
-
-type NullableMessageXmlWrapper struct {
-	Value MessageXmlWrapper
-	ExplicitNull bool
-}
-
-func (v NullableMessageXmlWrapper) MarshalJSON() ([]byte, error) {
-    switch {
-    case v.ExplicitNull:
-        return []byte("null"), nil
-    default:
-		return json.Marshal(v.Value)
-	}	
-}
-
-func (v *NullableMessageXmlWrapper) UnmarshalJSON(src []byte) error {
-	if bytes.Equal(src, []byte("null")) {
-		v.ExplicitNull = true
-		return nil
-	}
-
-	return json.Unmarshal(src, &v.Value)
-}
-

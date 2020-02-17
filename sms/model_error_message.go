@@ -9,106 +9,10 @@
  */
 
 package sms
-
-import (
-	"bytes"
-	"encoding/json"
-)
-
 // ErrorMessage struct for ErrorMessage
 type ErrorMessage struct {
 	// The error status of the message
-	Status *string `json:"status,omitempty"`
+	Status string `json:"status,omitempty"`
 	// The description of the error
-	ErrorText *string `json:"error-text,omitempty"`
+	ErrorText string `json:"error-text,omitempty"`
 }
-
-// GetStatus returns the Status field value if set, zero value otherwise.
-func (o *ErrorMessage) GetStatus() string {
-	if o == nil || o.Status == nil {
-		var ret string
-		return ret
-	}
-	return *o.Status
-}
-
-// GetStatusOk returns a tuple with the Status field value if set, zero value otherwise
-// and a boolean to check if the value has been set.
-func (o *ErrorMessage) GetStatusOk() (string, bool) {
-	if o == nil || o.Status == nil {
-		var ret string
-		return ret, false
-	}
-	return *o.Status, true
-}
-
-// HasStatus returns a boolean if a field has been set.
-func (o *ErrorMessage) HasStatus() bool {
-	if o != nil && o.Status != nil {
-		return true
-	}
-
-	return false
-}
-
-// SetStatus gets a reference to the given string and assigns it to the Status field.
-func (o *ErrorMessage) SetStatus(v string) {
-	o.Status = &v
-}
-
-// GetErrorText returns the ErrorText field value if set, zero value otherwise.
-func (o *ErrorMessage) GetErrorText() string {
-	if o == nil || o.ErrorText == nil {
-		var ret string
-		return ret
-	}
-	return *o.ErrorText
-}
-
-// GetErrorTextOk returns a tuple with the ErrorText field value if set, zero value otherwise
-// and a boolean to check if the value has been set.
-func (o *ErrorMessage) GetErrorTextOk() (string, bool) {
-	if o == nil || o.ErrorText == nil {
-		var ret string
-		return ret, false
-	}
-	return *o.ErrorText, true
-}
-
-// HasErrorText returns a boolean if a field has been set.
-func (o *ErrorMessage) HasErrorText() bool {
-	if o != nil && o.ErrorText != nil {
-		return true
-	}
-
-	return false
-}
-
-// SetErrorText gets a reference to the given string and assigns it to the ErrorText field.
-func (o *ErrorMessage) SetErrorText(v string) {
-	o.ErrorText = &v
-}
-
-type NullableErrorMessage struct {
-	Value ErrorMessage
-	ExplicitNull bool
-}
-
-func (v NullableErrorMessage) MarshalJSON() ([]byte, error) {
-    switch {
-    case v.ExplicitNull:
-        return []byte("null"), nil
-    default:
-		return json.Marshal(v.Value)
-	}	
-}
-
-func (v *NullableErrorMessage) UnmarshalJSON(src []byte) error {
-	if bytes.Equal(src, []byte("null")) {
-		v.ExplicitNull = true
-		return nil
-	}
-
-	return json.Unmarshal(src, &v.Value)
-}
-
