@@ -31,3 +31,24 @@ func TestSend(*testing.T) {
 	client := NewNexmoSMSClient(auth)
 	client.Send("44777000777", "44777000888", "hello", SMSClientOpts{})
 }
+
+func TestSendFail(*testing.T) {
+	httpmock.Activate()
+	defer httpmock.DeactivateAndReset()
+
+	httpmock.RegisterResponder("POST", "https://rest.nexmo.com/sms/json",
+		httpmock.NewStringResponder(200, `{
+				"message-count": "1",
+				"messages": [{
+					"status": "4",
+				}]
+			}`))
+
+	auth := CreateAuthFromKeySecret("12345678", "456")
+	client := NewNexmoSMSClient(auth)
+	_, err := client.Send("44777000777", "44777000888", "hello", SMSClientOpts{})
+
+	if err == nil {
+		panic("This should not work")
+	}
+}
