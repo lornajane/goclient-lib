@@ -1,7 +1,7 @@
 package nexmo
 
 import (
-	"fmt"
+	"errors"
 
 	"github.com/antihax/optional"
 	"github.com/lornajane/goclient-lib/sms"
@@ -22,13 +22,20 @@ func NewNexmoSMSClient(Auth Auth) *NexmoSMSClient {
 	return client
 }
 
-// Send an SMS
-func (client *NexmoSMSClient) Send(from string, to string, text string) {
+type SMSClientOpts struct {
+	Config *sms.Configuration
+}
+
+// Send an SMS. Give some text to send and the number to send to - there are
+// some restrictions on what you can send from, to be safe try using a Nexmo
+// number associated with your account
+func (client *NexmoSMSClient) Send(from string, to string, text string, opts SMSClientOpts) (sms.Sms, error) {
 
 	config := sms.NewConfiguration()
-
-	// for local Prism testing
-	config.BasePath = "http://localhost:4010"
+	// but use the one passed in if we got one
+	if opts.Config != nil {
+		config = opts.Config
+	}
 
 	smsClient := sms.NewAPIClient(config)
 
@@ -38,12 +45,16 @@ func (client *NexmoSMSClient) Send(from string, to string, text string) {
 
 	result, _, err := smsClient.DefaultApi.SendAnSms(nil, "json", client.apiKey, from, to, &smsOpts)
 
+	// catch HTTP errors
 	if err != nil {
-		panic(err)
+		return sms.Sms{}, err
 	}
-	fmt.Printf("%#v\n", result)
 
-	msgs := result.GetMessages()
-	fmt.Println(msgs[0].GetRemainingBalance())
+	// now worry about the status code in the response
+	if result.Messages[0].Status != "0" {
+		return result, errors.New("Status code: " + result.Messages[0].Status)
+	}
+
+	return result, nil
 
 }
