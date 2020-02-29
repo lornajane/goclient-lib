@@ -32,6 +32,7 @@ type SMSClientOpts struct {
 func (client *NexmoSMSClient) Send(from string, to string, text string, opts SMSClientOpts) (sms.Sms, error) {
 
 	config := sms.NewConfiguration()
+
 	// but use the one passed in if we got one
 	if opts.Config != nil {
 		config = opts.Config
